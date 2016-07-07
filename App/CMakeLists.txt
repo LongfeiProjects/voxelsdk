@@ -1,3 +1,9 @@
+cmake_minimum_required(VERSION 3.2)
+include_directories(/usr/include/voxel-0.6.1)
+include_directories(/usr/include/voxel-0.6.1/ti3dtof)
+include_directories(/usr/include/voxel-0.6.1/pcl)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 find_package(PCL 1.6 REQUIRED COMPONENTS common io visualization)
 
 IF(WINDOWS)
@@ -7,13 +13,16 @@ ENDIF()
 
 add_definitions(${PCL_DEFINITIONS})
 
+
 add_executable(SimpleVoxelViewer SimpleVoxelViewer.cpp PCLViewer.cpp)
 target_include_directories(SimpleVoxelViewer PUBLIC ${PCL_INCLUDE_DIRS} ${EIGEN_INCLUDE_DIRS})
 target_link_libraries(SimpleVoxelViewer voxelpcl ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} ${PCL_VISUALIZATION_LIBRARIES})
+target_link_libraries(SimpleVoxelViewer libvoxel.so.30)
 
 add_executable(VoxelCLI VoxelCLI.cpp CLIManager.cpp LineNoise.cpp PCLViewer.cpp)
 target_include_directories(VoxelCLI PUBLIC ${PCL_INCLUDE_DIRS} ${EIGEN_INCLUDE_DIRS})
 target_link_libraries(VoxelCLI voxelpcl ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} ${PCL_VISUALIZATION_LIBRARIES})
+target_link_libraries(VoxelCLI libvoxel.so.30)
 
 install(TARGETS SimpleVoxelViewer VoxelCLI
   RUNTIME DESTINATION bin
